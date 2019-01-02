@@ -8,4 +8,4 @@ In an event, most takes pictures for paticipants. However, when after events, it
 Users login to our website (e.g. photos.cssauw.org) choose an event that they pacitipated, type in their name then scan their faces. the page will be redirected to a site that contains their photos available for them to download.
 
 ## Check-in with face recognition
-### To be continued
+To be continued

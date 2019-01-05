@@ -1,0 +1,33 @@
+前端/移动端：
+	移动端的网页如何开发？
+	html 如何 access camera
+	UI Design
+	admin（管理员界面，看看照片分类有没有没毛病）
+		上传所有照片
+		预处理照片按钮
+		显示每张照片预处理后不同文件夹里的照片（方便核对）
+后端：
+	学习Django的使用 
+	图片储存
+	文件夹管理 （这个部分很大，安猪做过类似的）
+		每个不同的活动有不同的用户
+		不同的用户需要不同的文件夹来存放照片
+		（可以先把只能提供单一活动的版本做出来）
+	接收来自html端的图片和姓名
+	数据库
+		要画个CSE344 教过的图，来确定我们需要哪些table
+		包括 photo table（id pk，photo, people fk），
+		people table （id pk，face_code, photo fk），
+		他们之间是many to many的关系
+	连接算法部分
+		预处理照片（大量照片传进算法）
+		匹配照片 （用户拍照后分辨出该用户属于哪个文件夹）
+		
+算法部分
+	神经网络
+	读paper （FaceNet， etc）
+ 	找博客： https://blog.csdn.net/wonderseen/article/details/79135197）
+	预处理照片
+		将所有已上传的照片里的头像进行编码和标记
+		每多一个新的人脸就需要多一个分类，也就
+		意味着需要发送insert into table的指令（听着好难）

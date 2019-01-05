@@ -1,0 +1,18 @@
+Spec：
+	1. 做出核心算法
+		要求：
+			1. 实现Face Recognition：Feed in a photo, output the same photo with box around people’s face and display their name. (这个有人几个小时就实现了，如果我们一个星期做不出来，就去请教那个人)
+			（以black box的角度理解人脸识别：
+				input：一张脸，
+				output：如果认识，就会告诉你他是哪个类，如果不认识，就会告诉你不认识
+			  ）
+			2. 实现分类功能，人脸结果为“不认识”的，会分到一个新的类里面，结果为认识的会加入到以存在的类中。 （e.g. 加入到Map，if map.contains, map.put(sam, photoID), else map.put(new_name, photoID))
+	2. 实现简陋前端和较完整的后端 （这里有很多逻辑需要我们想）
+		要求：
+			1. 实现上传图片的功能（图片清晰度较高，注意观察上传速度会不会过慢）
+			2. 搭出数据库 （数据库逻辑很重要）
+			3. 实现图片预处理功能（black box view： input all photos， output classes of faces that have foreign key to photos）
+			4. 实现照片匹配功能 （input face， output all photos that is related to that face）
+	3. 内测及优化前后端
+	4. 公测
+			

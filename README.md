@@ -9,3 +9,6 @@ Users login to our website (e.g. photos.cssauw.org) choose an event that they pa
 
 ## Check-in with face recognition
 To be continued
+
+## Citations:
+https://github.com/ageitgey/face_recognition

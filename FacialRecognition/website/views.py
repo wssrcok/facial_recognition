@@ -11,7 +11,7 @@ from website.models import Files
 
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the index.")
+    return render(request, 'index.html')
 
 class UploadView(TemplateView):
     UploadTemplate = 'upload_view.html'

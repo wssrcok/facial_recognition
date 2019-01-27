@@ -7,11 +7,18 @@ from django.urls import reverse
 from django.views.generic import TemplateView
 from django.http import HttpResponseRedirect
 from website.forms import UploadFileForm
-from website.models import Files
-
+import os
+# Create your views here.
 
 def index(request):
-    return render(request, 'index.html')
+    # files = Files.objects.all()
+    # return render(request, 'index.html', {'files': files})
+    staticDir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/images/')
+    names= []
+    for (dirpath, dirnames, filenames) in os.walk(staticDir):
+        names.extend(filenames)
+        break
+    return render(request, 'index.html', {'fileNames': names})
 
 class UploadView(TemplateView):
     UploadTemplate = 'upload_view.html'
@@ -33,7 +40,7 @@ class UploadView(TemplateView):
             instance = Files(upload=request.FILES['image'], uploader=request.POST.get('uploader'))
             instance.save()
 
-            return HttpResponse("succes")
+            return HttpResponse("success")
         return render(request, 'upload_view.html', {'form': form})
 
 class SuccessView(TemplateView):

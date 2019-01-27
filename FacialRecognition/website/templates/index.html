@@ -31,5 +31,14 @@
     </ul>
   </div>
 </nav>
+{% load static %}
+{% static "" as baseUrl %}
+
+<!--{% for name in fileNames %}-->
+<!--<img src="{% static "images/{{ name }}/" %}">-->
+<!--{% endfor %}-->
+{% for name in fileNames  %}
+    <img src="{{ baseUrl }}images/{{name}}" style="width:300px; height:300px"></img>
+{% endfor %}
 </body>
 </html>

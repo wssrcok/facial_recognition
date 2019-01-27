@@ -49,3 +49,10 @@ class SuccessView(TemplateView):
     def get(self, request):
         UploadTemplate = 'success.html'
         return render(request, UploadTemplate)
+
+class AboutUsView(TemplateView):
+    UploadTemplate = 'about_us.html'
+
+    def get(self, request):
+        UploadTemplate = 'about_us.html'
+        return render(request, UploadTemplate)

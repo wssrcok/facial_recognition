@@ -25,17 +25,10 @@
             </ul>
         </div>
     </nav>
-
-    <!-- Load List of images -->
-
-    {% load static %}
-    {% static "" as baseUrl %}
-
-    <!--{% for name in fileNames %}-->
-    <!--<img src="{% static "images/{{ name }}/" %}">-->
-    <!--{% endfor %}-->
-    {% for name in fileNames  %}
-        <img src="{{ baseUrl }}images/{{name}}" style="width:300px; height:300px"></img>
-    {% endfor %}
+    <div>
+        <h3>
+            About us: Facial Recognition
+        </h3>
+    </div>
 </body>
 </html>

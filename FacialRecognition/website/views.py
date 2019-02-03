@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.views.generic import TemplateView
 from django.http import HttpResponseRedirect
 from website.forms import UploadFileForm
+from website.models import Files
 import os
 # Create your views here.
 
@@ -41,7 +42,7 @@ class UploadView(TemplateView):
             instance.save()
 
             return HttpResponse("success")
-        return render(request, 'upload_view.html', {'form': form})
+        return render(request, self.UploadTemplate, {'form': form})
 
 class SuccessView(TemplateView):
     UploadTemplate = 'success.html'

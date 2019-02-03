@@ -1,12 +1,15 @@
-<!DOCTYPE html>
+{% extends 'base_layout.html' %}
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>File Upload</title>
 </head>
 <body>
-{% load bootstrap4 %}
+{% load bootstrap4 %} -->
 
+
+{% block content %}
 <form action="" method="post" class="form" enctype="multipart/form-data">
     {% csrf_token %}
     {% bootstrap_form form %}
@@ -14,5 +17,7 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     {% endbuttons %}
 </form>
-</body>
-</html>
+{% endblock %}
+
+<!-- </body>
+</html> -->

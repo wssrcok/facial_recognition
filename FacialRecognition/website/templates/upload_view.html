@@ -10,13 +10,20 @@
 
 
 {% block content %}
-<form action="" method="post" class="form" enctype="multipart/form-data">
+<form action="" method="post" class="site-form" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {% bootstrap_form form %}
     {% buttons %}
         <button type="submit" class="btn btn-primary">Submit</button>
     {% endbuttons %}
 </form>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
 {% endblock %}
 
 <!-- </body>

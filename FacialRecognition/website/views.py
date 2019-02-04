@@ -1,15 +1,11 @@
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-
-# Create your views here.
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
 from django.views.generic import TemplateView
-from django.http import HttpResponseRedirect
-from website.forms import UploadFileForm
+from website.forms import UploadFileForm, UploadMultipleFileForm
 from website.models import Files
+from django.views.generic.edit import FormView
+from django.contrib import messages
 import os
-# Create your views here.
 
 def index(request):
     # files = Files.objects.all()
@@ -43,6 +39,31 @@ class UploadView(TemplateView):
 
             return HttpResponse("success")
         return render(request, self.UploadTemplate, {'form': form})
+
+
+class UploadMultipleView(FormView):
+    form_class = UploadMultipleFileForm
+    template_name = 'upload_view.html'
+    def get(self, request):
+        # UploadTemplate = 'upload_view.html'
+        # return render(request, UploadTemplate)
+        form = UploadMultipleFileForm()
+
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        files = request.FILES.getlist('images')
+        if form.is_valid():
+            for f in files:
+                # print(f) -> xxx.jpg
+                instance = Files(upload=f, uploader=request.POST.get('uploader'))
+                instance.save()
+                messages.success(request, 'Upload images successful')
+            return render(request, self.template_name, {'form': form})
+        else:
+            return self.form_invalid(form)
 
 class SuccessView(TemplateView):
     UploadTemplate = 'success.html'

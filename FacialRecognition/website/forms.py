@@ -11,3 +11,7 @@ class UploadFileForm(forms.ModelForm):
     class Meta:
         model = Files
         fields = ['uploader']
+
+class UploadMultipleFileForm(forms.Form):
+    uploader = forms.CharField(max_length=50)
+    images = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))

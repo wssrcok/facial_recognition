@@ -17,7 +17,9 @@
             <ul class="nav navbar-nav">
                 <li><a href="{% url 'index' %}">Home</a></li>
                 <li><a href="{% url 'upload' %}">Upload</a></li>
+                <li><a href="{% url 'download' %}">Download</a></li>
                 <li><a href="{% url 'about_us' %}">About us</a></li>
+                {% comment %} <li><a href="{% url 'admin' %}">Admin</a></li> {% endcomment %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>

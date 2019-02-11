@@ -1,11 +1,16 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, reverse, get_object_or_404
 from django.views.generic import TemplateView
-from website.forms import UploadFileForm, UploadMultipleFileForm
-from website.models import Files
+from website.forms import UploadFileForm, UploadMultipleFileForm, UploadForm
+from website.models import UploadModel
 from django.views.generic.edit import FormView
 from django.contrib import messages
+from FacialRecognition.settings import BASE_DIR
+from django.utils.encoding import smart_str
+from wsgiref.util import FileWrapper
 import os
+import zipfile
+from io import BytesIO
 
 def index(request):
     # files = Files.objects.all()
@@ -21,25 +26,19 @@ class UploadView(TemplateView):
     UploadTemplate = 'upload_view.html'
 
     def get(self, request):
-        # UploadTemplate = 'upload_view.html'
-        # return render(request, UploadTemplate)
-        form = UploadFileForm()
-
+        form = UploadForm()
         return render(request, self.UploadTemplate, {'form': form})
 
     def post(self, request):
-        form = UploadFileForm(request.POST, request.FILES)
-        print("got")
+        form = UploadForm(request.POST, request.FILES)
         if form.is_valid():
             # file is saved
             # form.save()
-            print("its here")
-            instance = Files(upload=request.FILES['image'], uploader=request.POST.get('uploader'))
+            instance = UploadModel(upload=request.FILES['upload'], uploader=request.POST.get('uploader'))
             instance.save()
 
             return HttpResponse("success")
         return render(request, self.UploadTemplate, {'form': form})
-
 
 class UploadMultipleView(FormView):
     form_class = UploadMultipleFileForm
@@ -54,23 +53,57 @@ class UploadMultipleView(FormView):
     def post(self, request, *args, **kwargs):
         form_class = self.get_form_class()
         form = self.get_form(form_class)
-        files = request.FILES.getlist('images')
+        files = request.FILES.getlist('upload')
         if form.is_valid():
             for f in files:
                 # print(f) -> xxx.jpg
-                instance = Files(upload=f, uploader=request.POST.get('uploader'))
+                instance = UploadModel(upload=f, uploader=request.POST.get('uploader'))
                 instance.save()
                 messages.success(request, 'Upload images successful')
             return render(request, self.template_name, {'form': form})
         else:
             return self.form_invalid(form)
 
-class SuccessView(TemplateView):
-    UploadTemplate = 'success.html'
-
+class DownloadView(TemplateView):
+    template_name = 'download_view.html'
     def get(self, request):
-        UploadTemplate = 'success.html'
-        return render(request, UploadTemplate)
+        return render(request, 'download_view.html')
+
+    # def post(self, request, *args, **kwargs):
+    #     model_object = UploadModel.objects.get(pk=1) #get an instance of model which has an ImageField
+    #     context = {'image' : model_object.upload}
+    #     html = render(request , 'download_view.html' , context)
+    #     return response
+
+def download_handler(request):
+
+    file_paths = [str(model_object.upload) for model_object in UploadModel.objects.all()]
+    zip_subdir = "your_faces"
+    zip_filename = "%s.zip" % zip_subdir
+    # Open StringIO to grab in-memory ZIP contents
+    s = BytesIO()
+    # The zip compressor
+    zf = zipfile.ZipFile(s, "w")
+    for fpath in file_paths:
+        # Calculate path for file in zip
+        fdir, fname = os.path.split(fpath)
+        zip_path = os.path.join(zip_subdir, fname)
+        zf.write(fpath, zip_path)
+    zf.close()
+    response = HttpResponse(s.getvalue(), content_type = "application/x-zip-compressed")
+    # ..and correct content-disposition
+    response['Content-Disposition'] = 'attachment; filename=%s' % zip_filename
+    return response
+
+def download_single_image(request):
+    model_object = UploadModel.objects.get(pk=2)
+    file_path = str(model_object.upload)
+    filename = str(model_object)
+    with open(file_path, 'rb') as image:
+        response = HttpResponse(image.read(), content_type='image/jpeg')
+        response['Content-Length'] = os.path.getsize(file_path)
+        response['Content-Disposition'] = 'attachement; filename=%s' % filename
+        return response
 
 class AboutUsView(TemplateView):
     UploadTemplate = 'about_us.html'

@@ -79,7 +79,7 @@ def retrive_photos(
         known_person_dir --- directory of known person 
     '''
     while(True):
-        input_img = input("directory of input image? ")
+        input_img = raw_input("directory of input image? ")
         input_encoding = get_encoding(input_img)
         avg_result = []
         for group_encoding in known_faces_encoding:

@@ -1,0 +1,33 @@
+{% extends 'base_layout.html' %}
+{% load bootstrap4 %}
+{% block content %}
+<h3>Turn pictures into face encodings!</h3>
+<form action="" method="post" class="site-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <button type="submit" name="process" class="btn btn-primary">Process</button>
+</form>
+<h3>Get your own pictures!</h3>
+<form action="" method="post" class="site-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <button type="submit" name="userinput" class="btn btn-primary">Upload</button>
+</form>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+<!-- Load List of images -->
+
+{% load static %}
+{% static "" as baseUrl %}
+
+<!--{% for name in fileNames %}-->
+<!--<img src="{% static "images/{{ name }}/" %}">-->
+<!--{% endfor %}-->
+{% for name in fileNames  %}
+    <img src="{{ baseUrl }}images/{{name}}" style="width:300px; height:300px"></img>
+{% endfor %}
+{% endblock %}

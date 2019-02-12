@@ -17,34 +17,32 @@ def get_encoding(file):
 
 
 def retrive_photos(
+    tolerance,
+    input_img,
     known_encodings,
-    known_person_dir="./known_person"):
-    
-    input_img = raw_input("Please enter the path of image of unknown person: ")
+    known_person_dir="website/static/images"):
     unknown_encoding = get_encoding(input_img)
+    known_filenames = os.listdir(known_person_dir)
     
+    retrived_file_paths = []
     for img_index in range(len(known_encodings)):
-        if known_encodings[img_index] is not None: 
-            distances = face_recognition.face_distance(known_encodings[img_index], unknown_encoding)
-            
-            for distance in distances:
-                if distance < 0.4:
-                    # print(os.listdir(known_person_dir)[img_index])
-                    path = os.path.join(known_person_dir, os.listdir(known_person_dir)[img_index])
-                    im = Image.open(path)
-                    im.show()
+        if known_encodings[img_index] is None:
+            continue
+        distances = face_recognition.face_distance(known_encodings[img_index], unknown_encoding)
+        for distance in distances:
+            if distance < tolerance:
+                filename = known_filenames[img_index]
+                retrived_file_paths.append(filename)
+    return retrived_file_paths
+
+def recognition_main(unknown_person_path, tolerance):
+    with open('website/static/encodings.txt', 'rb') as f:
+        known_encodings = pickle.load(f)
+        return retrive_photos(
+            tolerance,
+            unknown_person_path,
+            known_encodings, 
+            known_person_dir="website/static/images")
 
 if __name__ == '__main__':
-
-    with open('encodings.txt', 'rb') as f:
-        known_encodings = pickle.load(f)
-   
-    while True:
-        try:
-            retrive_photos(
-                   known_encodings, 
-                   known_person_dir="./known_person")
-        except KeyboardInterrupt:
-            print("")
-            quit()
-        
+    recognition_main()

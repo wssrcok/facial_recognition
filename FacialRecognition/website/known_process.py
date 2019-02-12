@@ -14,7 +14,7 @@ def get_encoding(file):
         print(file + " is not an image file.")
 
 
-def get_face_list(known_person_dir = "./static/images"):
+def get_face_list(known_person_dir = "website/static/images"):
     known_encodings = []
 
     for img in os.listdir(known_person_dir):
@@ -27,9 +27,9 @@ def get_face_list(known_person_dir = "./static/images"):
     return known_encodings
                
 def known_process_main():
-    known_encodings = get_face_list(known_person_dir="./static/images")
+    known_encodings = get_face_list(known_person_dir="website/static/images")
     print(len(known_encodings))
-    with open("encodings.txt", 'wb') as f:
+    with open("website/static/encodings.txt", 'wb') as f:
         pickle.dump(known_encodings, f)
     
 if __name__ == '__main__':

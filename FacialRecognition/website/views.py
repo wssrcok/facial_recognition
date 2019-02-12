@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, reverse, get_object_or_404
 from django.views.generic import TemplateView
-from website.forms import UploadFileForm, UploadMultipleFileForm, UploadForm
+from website.forms import *
 from website.models import UploadModel
 from django.views.generic.edit import FormView
 from django.contrib import messages
@@ -11,6 +11,9 @@ from wsgiref.util import FileWrapper
 import os
 import zipfile
 from io import BytesIO
+from threading import Thread
+from .known_process import known_process_main
+from .unknown_recognition import recognition_main
 
 def index(request):
     # files = Files.objects.all()
@@ -22,31 +25,12 @@ def index(request):
         break
     return render(request, 'index.html', {'fileNames': names})
 
-class UploadView(TemplateView):
-    UploadTemplate = 'upload_view.html'
-
-    def get(self, request):
-        form = UploadForm()
-        return render(request, self.UploadTemplate, {'form': form})
-
-    def post(self, request):
-        form = UploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            # file is saved
-            # form.save()
-            instance = UploadModel(upload=request.FILES['upload'], uploader=request.POST.get('uploader'))
-            instance.save()
-
-            return HttpResponse("success")
-        return render(request, self.UploadTemplate, {'form': form})
-
 class UploadMultipleView(FormView):
     form_class = UploadMultipleFileForm
     template_name = 'upload_view.html'
     def get(self, request):
-        # UploadTemplate = 'upload_view.html'
-        # return render(request, UploadTemplate)
-        form = UploadMultipleFileForm()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
 
         return render(request, self.template_name, {'form': form})
 
@@ -67,7 +51,7 @@ class UploadMultipleView(FormView):
 class DownloadView(TemplateView):
     template_name = 'download_view.html'
     def get(self, request):
-        return render(request, 'download_view.html')
+        return render(request, self.template_name)
 
     # def post(self, request, *args, **kwargs):
     #     model_object = UploadModel.objects.get(pk=1) #get an instance of model which has an ImageField
@@ -96,7 +80,47 @@ def download_handler(request):
     response['Content-Disposition'] = 'attachment; filename=%s' % zip_filename
     return response
 
-# not using this funciton right now
+class BackendView(FormView):
+    form_class = UserInputForm
+    template_name = 'backend_view.html'
+    def get(self, request):
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        return render(request, self.template_name, {'form': form, 'fileNames':[]})
+    
+    def post(self, request, *args, **kwargs):
+        if "process" in request.POST:
+            thread = Thread(target = known_process_main)
+            thread.start()
+            messages.success(request, 'processing files')
+        elif "userinput" in request.POST:
+            form_class = self.get_form_class()
+            form = self.get_form(form_class)
+            if form.is_valid():
+                file_path = request.FILES['upload']
+                filename = str(file_path).split()[-1] 
+                instance = UploadModel(upload=file_path, uploader='userinput')
+                instance.save()
+                tolerance = 0.45 # will take userinput later
+                retrived_file_paths = recognition_main(file_path, tolerance)
+                if filename in retrived_file_paths:
+                    retrived_file_paths.remove(filename)
+                instance.delete()
+                messages.success(request, 'retrive file successful' + str(retrived_file_paths))
+                return render(request, self.template_name, {'form': form, 'fileNames': retrived_file_paths}) 
+
+        return render(request, self.template_name)
+
+
+class AboutUsView(TemplateView):
+    template_name = 'about_us.html'
+
+    def get(self, request):
+        template_name = 'about_us.html'
+        return render(request, template_name)
+
+# not using these funcitons right now
+
 def download_single_image(request):
     model_object = UploadModel.objects.get(pk=2)
     file_path = str(model_object.upload)
@@ -107,9 +131,20 @@ def download_single_image(request):
         response['Content-Disposition'] = 'attachement; filename=%s' % filename
         return response
 
-class AboutUsView(TemplateView):
-    UploadTemplate = 'about_us.html'
+class UploadView(TemplateView):
+    UploadTemplate = 'upload_view.html'
 
     def get(self, request):
-        UploadTemplate = 'about_us.html'
-        return render(request, UploadTemplate)
+        form = UploadForm()
+        return render(request, self.UploadTemplate, {'form': form})
+
+    def post(self, request):
+        form = UploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            # file is saved
+            # form.save()
+            instance = UploadModel(upload=request.FILES['upload'], uploader=request.POST.get('uploader'))
+            instance.save()
+
+            return HttpResponse("success")
+        return render(request, self.UploadTemplate, {'form': form})

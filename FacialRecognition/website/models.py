@@ -21,6 +21,7 @@ class UploadModel(models.Model):
         return str(self.upload).split('/')[-1]
     
 # These two auto-delete files from filesystem when they are unneeded:
+# https://stackoverflow.com/questions/16041232/django-delete-filefield
 
 @receiver(models.signals.post_delete, sender=UploadModel)
 def auto_delete_file_on_delete(sender, instance, **kwargs):

@@ -75,6 +75,7 @@ class DownloadView(TemplateView):
     #     html = render(request , 'download_view.html' , context)
     #     return response
 
+# https://stackoverflow.com/questions/12881294/django-create-a-zip-of-multiple-files-and-make-it-downloadable
 def download_handler(request):
 
     file_paths = [str(model_object.upload) for model_object in UploadModel.objects.all()]
@@ -95,6 +96,7 @@ def download_handler(request):
     response['Content-Disposition'] = 'attachment; filename=%s' % zip_filename
     return response
 
+# not using this funciton right now
 def download_single_image(request):
     model_object = UploadModel.objects.get(pk=2)
     file_path = str(model_object.upload)

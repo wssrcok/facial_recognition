@@ -5,7 +5,7 @@ from . import views
 from website.views import *
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', IndexView.as_view(), name='index'),
     path('about_us/', AboutUsView.as_view(), name='about_us'),
     path('upload/', UploadMultipleView.as_view(), name='upload'),
     path('backend/', BackendView.as_view(), name='backend'),

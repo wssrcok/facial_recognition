@@ -15,15 +15,27 @@ from threading import Thread
 from .known_process import known_process_main
 from .unknown_recognition import recognition_main
 
-def index(request):
-    # files = Files.objects.all()
-    # return render(request, 'index.html', {'files': files})
-    staticDir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/images/')
-    names= []
-    for (dirpath, dirnames, filenames) in os.walk(staticDir):
-        names.extend(filenames)
-        break
-    return render(request, 'index.html', {'fileNames': names})
+class IndexView(TemplateView):
+    def get(self, request):
+        all_images = UploadModel.objects.all()
+        all_filenames = [str(a) for a in all_images]
+        print(all_filenames)
+        print(11111)
+        # staticDir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/images/')
+        # names= []
+        # for (dirpath, dirnames, filenames) in os.walk(staticDir):
+        #     names.extend(filenames)
+        #     break
+        return render(request, 'index.html', {'fileNames': all_filenames, 'fileNames2': all_filenames})
+
+
+def save(request):
+ if request.method == "POST":
+  if models.Book.objects.filter(book__exact=request.POST["books"]).exists():
+   models.Book.objects.create(book=request.POST["books"])
+
+ return redirect('index')
+
 
 class UploadMultipleView(FormView):
     form_class = UploadMultipleFileForm
@@ -109,7 +121,6 @@ class BackendView(FormView):
                 instance.delete()
                 messages.success(request, 'retrive file successful' + str(retrived_file_paths))
                 return render(request, self.template_name, {'form': form, 'fileNames': retrived_file_paths}) 
-
 
 
 class AboutUsView(TemplateView):

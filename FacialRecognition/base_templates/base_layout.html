@@ -23,8 +23,14 @@
                 {% comment %} <li><a href="{% url 'admin' %}">Admin</a></li> {% endcomment %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-                <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                <li><a href="{% url 'signup' %}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                <li>
+                    <form class="logout-link" action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" name="button">Logout</button>
+                    </form>
+                </li>
             </ul>
         </div>
     </nav>

@@ -11,7 +11,7 @@ In an event, most takes pictures for paticipants. However, when after events, it
 pip install django-bootstrap4
 ```
 ```
-pip instal face_recognition
+pip install face_recognition
 ```
 ```
 pip install django-multiselectfield

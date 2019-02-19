@@ -7,9 +7,14 @@ In an event, most takes pictures for paticipants. However, when after events, it
 ### Usage
 
 #### Packages to Insatll
-Django-bootstrap4
 ```
 pip install django-bootstrap4
+```
+```
+pip install face_recognition
+```
+```
+pip install django-multiselectfield
 ```
 
 Users login to our website (e.g. photos.cssauw.org) choose an event that they pacitipated, type in their name then scan their faces. Then the page will be redirected to a site that contains their photos available for them to download.

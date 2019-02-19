@@ -1,8 +1,7 @@
 import face_recognition
 import os
 import pickle
-
-from PIL import Image
+from FacialRecognition.settings import DEBUG
 
 def get_encoding(file):
     try:
@@ -33,6 +32,8 @@ def retrive_photos(
             if distance < tolerance:
                 filename = known_filenames[img_index]
                 retrived_file_paths.append(filename)
+                if DEBUG:
+                    print(filename+", distance:", distance)
     return retrived_file_paths
 
 def recognition_main(unknown_person_path, tolerance):
@@ -44,5 +45,3 @@ def recognition_main(unknown_person_path, tolerance):
             known_encodings, 
             known_person_dir="website/static/images")
 
-if __name__ == '__main__':
-    recognition_main()

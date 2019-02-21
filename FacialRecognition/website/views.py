@@ -117,7 +117,7 @@ class BackendView(FormView):
                 filename = str(file_path).split()[-1] 
                 instance = UploadModel(upload=file_path, uploader='userinput')
                 instance.save()
-                tolerance = 0.4 # will take userinput later
+                tolerance = 0.45 # will take userinput later
                 retrived_file_paths = recognition_main(file_path, tolerance)
                 if filename in retrived_file_paths:
                     retrived_file_paths.remove(filename)

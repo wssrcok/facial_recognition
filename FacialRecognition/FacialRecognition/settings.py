@@ -25,7 +25,7 @@ SECRET_KEY = '+a5thnbsj2%pt5g_-dumxn4z1bwfu9hc-b^wo)e0t)q+5zqc47'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['60.191.82.91']
 
 # Application definition
 
@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap4',
-    'multiselectfield',
     'website',
 ]
 
